@@ -4,7 +4,6 @@ import React from "react";
 import Image from "next/image";
 import { ArrowLeft, ArrowUpRight, Phone, Mail, GraduationCap, Sparkles } from "lucide-react";
 import { sound } from "@/utils/audio";
-import Footer from "./Footer";
 
 interface AboutSectionProps {
   onBack?: () => void;
@@ -115,9 +114,6 @@ export default function AboutSection({ onBack }: AboutSectionProps) {
           <span className="text-white/50 text-[11px]">COMMISSIONS & ROLES</span>
         </div>
       </div>
-
-      {/* 4. Unified Footer with Signature & design web rezon@2026 */}
-      <Footer onNavigate={onBack} />
     </section>
   );
 }

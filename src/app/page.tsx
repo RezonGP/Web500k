@@ -11,7 +11,6 @@ import {
   ProjectModal,
   AboutSection,
   ContactSection,
-  Footer,
 } from "@/components";
 import { projects } from "@/data/projects";
 import { usePortfolioState, useScrollTo } from "@/hooks";
@@ -88,9 +87,6 @@ export default function Home() {
                 viewMode={viewMode}
               />
             </div>
-
-            {/* 4. Unified Footer */}
-            <Footer onNavigate={onNavigateAndScroll} />
           </>
         )}
 
@@ -103,10 +99,7 @@ export default function Home() {
         )}
 
         {currentSection === "contact" && (
-          <>
-            <ContactSection />
-            <Footer onNavigate={onNavigateAndScroll} />
-          </>
+          <ContactSection />
         )}
       </div>
 
