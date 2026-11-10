@@ -4,9 +4,10 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 /**
- * SmokeSpotlightCanvas: Nền khói xám chuyển động (Dynamic Fluid Silk / Smoke Shader)
- * Tái hiện luồng sáng Spotlight từ đỉnh rọi xuống cùng làn khói lụa hữu cơ chuyển động 60FPS.
- * Tích hợp IntersectionObserver để tạm dừng khi người dùng cuộn khỏi màn hình (tiết kiệm CPU/GPU).
+ * SmokeSpotlightCanvas: Nền khói xám chuyển động tự động (Autonomous Fluid Silk/Smoke Shader)
+ * Thay thế toàn bộ nền đen tĩnh bằng làn khói lụa hữu cơ chuyển động tự nhiên 60FPS.
+ * Chuyển động 100% tự động, không phụ thuộc vào chuột.
+ * Tự động tạm dừng khi người dùng chuyển tab để tiết kiệm pin và tài nguyên.
  */
 export default function SmokeSpotlightCanvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -31,19 +32,14 @@ export default function SmokeSpotlightCanvas() {
     }
 
     let animationFrameId: number;
-    let isVisible = true;
-    let mouseX = 0;
-    let mouseY = 0;
-    let targetMouseX = 0;
-    let targetMouseY = 0;
+    let isVisible = !document.hidden;
 
     // Resize canvas theo kích thước viewport thực tế
     const handleResize = () => {
-      if (!canvas || !containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
+      if (!canvas) return;
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      const width = Math.floor(rect.width * dpr * 0.75);
-      const height = Math.floor(rect.height * dpr * 0.75);
+      const width = Math.floor(window.innerWidth * dpr * 0.75);
+      const height = Math.floor(window.innerHeight * dpr * 0.75);
 
       if (canvas.width !== width || canvas.height !== height) {
         canvas.width = width;
@@ -55,6 +51,12 @@ export default function SmokeSpotlightCanvas() {
     handleResize();
     window.addEventListener("resize", handleResize);
 
+    // Tạm dừng khi người dùng chuyển sang tab khác
+    const handleVisibilityChange = () => {
+      isVisible = !document.hidden;
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     // Vertex Shader
     const vsSource = `
       attribute vec2 position;
@@ -63,12 +65,11 @@ export default function SmokeSpotlightCanvas() {
       }
     `;
 
-    // Fragment Shader: Silk smoke billowing waves + Overhead spotlight
+    // Fragment Shader: Khói xám chuyển động tự động 100% + Luồng Spotlight đỉnh
     const fsSource = `
       precision highp float;
       uniform float u_time;
       uniform vec2 u_resolution;
-      uniform vec2 u_mouse;
 
       float hash(vec2 p) {
         p = fract(p * vec2(123.34, 456.21));
@@ -105,17 +106,21 @@ export default function SmokeSpotlightCanvas() {
         vec2 p = (uv - 0.5) * vec2(aspect, 1.0);
 
         // Tốc độ chuyển động tự nhiên, thư thái
-        float t = u_time * 0.12;
+        float t = u_time * 0.14;
         
-        // Domain warping cho làn khói lụa uốn lượn
+        // Dòng chảy khói tự động đa hướng (Autonomous atmospheric flow)
+        vec2 flowA = vec2(sin(t * 0.35) * 0.15, -t * 0.32);
+        vec2 flowB = vec2(cos(t * 0.28) * 0.18, t * 0.24);
+
+        // Domain warping cho làn khói lụa uốn lượn liên tục
         vec2 q = vec2(
-          fbm(p * 1.8 + vec2(0.0, -t * 0.28)),
-          fbm(p * 1.8 + vec2(4.3, t * 0.22))
+          fbm(p * 1.8 + flowA),
+          fbm(p * 1.8 + vec2(4.3, 0.0) + flowB)
         );
 
         vec2 r = vec2(
-          fbm(p * 2.5 + 2.0 * q + vec2(1.7, -t * 0.35) + u_mouse * 0.12),
-          fbm(p * 2.5 + 2.0 * q + vec2(8.3, t * 0.3) - u_mouse * 0.12)
+          fbm(p * 2.4 + 2.0 * q + vec2(1.7, -t * 0.38) + vec2(sin(t * 0.2), cos(t * 0.25)) * 0.15),
+          fbm(p * 2.4 + 2.0 * q + vec2(8.3, t * 0.32) - vec2(cos(t * 0.22), sin(t * 0.18)) * 0.15)
         );
 
         float f = fbm(p * 2.0 + 2.2 * r);
@@ -223,40 +228,14 @@ export default function SmokeSpotlightCanvas() {
 
     const uTime = gl.getUniformLocation(program, "u_time");
     const uRes = gl.getUniformLocation(program, "u_resolution");
-    const uMouse = gl.getUniformLocation(program, "u_mouse");
-
-    // Lắng nghe di chuột để khói xáo động êm ái
-    const handleMouseMove = (e: MouseEvent) => {
-      targetMouseX = (e.clientX / window.innerWidth) * 2 - 1;
-      targetMouseY = -(e.clientY / window.innerHeight * 2 - 1);
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-
-    // Tối ưu hiệu năng: Dừng animation khi ra khỏi màn hình
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        isVisible = entry?.isIntersecting ?? false;
-      },
-      { threshold: 0.05 }
-    );
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
 
     const startTime = performance.now();
 
     const render = () => {
       if (isVisible) {
-        // Làm mịn chuyển động chuột (LERP)
-        mouseX += (targetMouseX - mouseX) * 0.05;
-        mouseY += (targetMouseY - mouseY) * 0.05;
-
         const time = (performance.now() - startTime) * 0.001;
         gl.uniform1f(uTime, time);
         gl.uniform2f(uRes, canvas.width, canvas.height);
-        gl.uniform2f(uMouse, mouseX, mouseY);
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
       }
@@ -268,8 +247,7 @@ export default function SmokeSpotlightCanvas() {
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", handleResize);
-      window.removeEventListener("mousemove", handleMouseMove);
-      observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
 
       if (gl) {
         gl.deleteBuffer(posBuffer);
@@ -283,13 +261,13 @@ export default function SmokeSpotlightCanvas() {
   return (
     <div
       ref={containerRef}
-      className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
       aria-hidden="true"
     >
-      {/* 1. Canvas WebGL: Làn khói xám chuyển động mềm mại & Spotlight đỉnh */}
+      {/* 1. Canvas WebGL: Làn khói xám chuyển động tự động 60FPS toàn trang */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-out"
+        className="absolute inset-0 h-full w-full object-cover"
         style={{ filter: "contrast(108%) brightness(102%)" }}
       />
 

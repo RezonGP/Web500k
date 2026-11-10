@@ -112,7 +112,7 @@ export default function HomeSlider({
   };
 
   return (
-    <section className="relative flex min-h-screen w-full flex-col justify-between overflow-hidden pt-20 pb-16 sm:pt-24 bg-black select-none">
+    <section className="relative flex min-h-screen w-full flex-col justify-between overflow-hidden pt-20 pb-16 sm:pt-24 bg-transparent select-none">
       {/* 1. Header Section: Title + 5-Category Pillars (Chuẩn Trang 3 Table of Contents) */}
       <div className="z-20 flex flex-col gap-6 px-6 font-sans text-xs sm:px-12">
         {/* Top Counter Bar */}

@@ -18,7 +18,7 @@ export default function AboutSection({ onBack }: AboutSectionProps) {
   };
 
   return (
-    <section className="min-h-screen pt-24 pb-0 bg-black text-white selection:bg-red-500 selection:text-white animate-in fade-in duration-500">
+    <section className="min-h-screen pt-24 pb-0 bg-transparent text-white selection:bg-red-500 selection:text-white animate-in fade-in duration-500">
       {/* 1. Top Section Header Bar */}
       <div className="max-w-7xl mx-auto px-6 sm:px-12 flex items-center justify-between border-b border-white/10 pb-4 font-sans text-xs uppercase tracking-wider text-white/60 font-medium">
         <div className="flex items-center gap-3">

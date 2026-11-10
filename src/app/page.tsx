@@ -11,6 +11,7 @@ import {
   ProjectModal,
   AboutSection,
   ContactSection,
+  SmokeSpotlightCanvas,
 } from "@/components";
 import { projects } from "@/data/projects";
 import { usePortfolioState, useScrollTo } from "@/hooks";
@@ -51,7 +52,10 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen w-full bg-black text-white selection:bg-red-500 selection:text-white">
+    <main className="relative min-h-screen w-full bg-[#08080a] text-white selection:bg-red-500 selection:text-white">
+      {/* 0. Nền khói xám chuyển động tự động toàn trang (Fixed Global Smoke & Spotlight Background) */}
+      <SmokeSpotlightCanvas />
+
       {/* 1. Intro Cinematic Video */}
       {showIntro && <IntroVideo onComplete={handleIntroComplete} />}
 

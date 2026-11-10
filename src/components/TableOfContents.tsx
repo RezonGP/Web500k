@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import SmokeSpotlightCanvas from "./SmokeSpotlightCanvas";
 import { sound } from "@/utils/audio";
 import type { CategoryType } from "@/types";
 
@@ -49,11 +48,8 @@ export default function TableOfContents({ onSelectCategory }: TableOfContentsPro
   );
 
   return (
-    <section className="relative w-full min-h-screen py-16 px-6 sm:px-12 md:px-16 flex flex-col justify-between bg-black text-white select-none overflow-hidden">
-      {/* 1. NỀN KHÓI XÁM CHUYỂN ĐỘNG & SPOTLIGHT ĐỈNH: Fluid WebGL Shader 60FPS */}
-      <SmokeSpotlightCanvas />
-
-      {/* 2. HEADER BAR (2 GÓC TRÊN NGUYÊN BẢN) */}
+    <section className="relative w-full min-h-screen py-16 px-6 sm:px-12 md:px-16 flex flex-col justify-between bg-transparent text-white select-none overflow-hidden">
+      {/* 1. HEADER BAR (2 GÓC TRÊN NGUYÊN BẢN) */}
       <div className="relative z-10 w-full max-w-7xl mx-auto flex items-center justify-between font-display text-xs sm:text-sm uppercase tracking-wider font-bold text-white/90">
         <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">DATE 2026</span>
         <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">GRAPHIC DESIGNER</span>

@@ -32,7 +32,7 @@ export default function HeroCover({ onExplore }: HeroCoverProps) {
     <section
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative flex h-screen w-full flex-col items-center justify-between overflow-hidden bg-black select-none"
+      className="relative flex h-screen w-full flex-col items-center justify-between overflow-hidden bg-transparent select-none"
     >
       {/* 1. Exact Cover Image matching Frame 156 of the intro video with subtle 3D parallax */}
       <div
