@@ -37,13 +37,17 @@ export default function TableOfContents({ onSelectCategory }: TableOfContentsPro
       onClick={() => handleClick(btn.id)}
       onMouseEnter={() => sound.playHover()}
       data-cursor="OPEN"
-      className="group relative flex items-center justify-center rounded-[2px] border border-white/60 bg-black/75 px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 backdrop-blur-md transition-all duration-300 ease-out hover:border-white hover:bg-white hover:text-black hover:shadow-[0_0_40px_rgba(255,255,255,0.5)] hover:scale-105 active:scale-95 focus:outline-hidden"
+      className="group relative flex items-center justify-center rounded-[2px] border-[1.5px] border-dashed border-white/50 bg-black/75 px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 backdrop-blur-md transition-all duration-300 ease-out hover:border-solid hover:border-white hover:bg-white hover:text-black hover:shadow-[0_0_40px_rgba(255,255,255,0.5)] hover:scale-105 active:scale-95 focus:outline-hidden"
     >
+      {/* 4 Chấu góc kỹ thuật nghệ thuật */}
+      <div className="pointer-events-none absolute -top-[1.5px] -left-[1.5px] w-2 h-2 border-t-[1.5px] border-l-[1.5px] border-white/80 transition-colors duration-300 group-hover:border-black" />
+      <div className="pointer-events-none absolute -top-[1.5px] -right-[1.5px] w-2 h-2 border-t-[1.5px] border-r-[1.5px] border-white/80 transition-colors duration-300 group-hover:border-black" />
+      <div className="pointer-events-none absolute -bottom-[1.5px] -left-[1.5px] w-2 h-2 border-b-[1.5px] border-l-[1.5px] border-white/80 transition-colors duration-300 group-hover:border-black" />
+      <div className="pointer-events-none absolute -bottom-[1.5px] -right-[1.5px] w-2 h-2 border-b-[1.5px] border-r-[1.5px] border-white/80 transition-colors duration-300 group-hover:border-black" />
+
       <span className="font-display font-bold text-white transition-colors duration-300 group-hover:text-black text-sm sm:text-base md:text-lg lg:text-xl tracking-wide whitespace-nowrap select-none">
         {btn.label}
       </span>
-      {/* Subtle ring border reflection */}
-      <div className="pointer-events-none absolute inset-0 rounded-[2px] opacity-0 transition-opacity duration-300 group-hover:opacity-100 ring-1 ring-white/50" />
     </button>
   );
 
@@ -57,30 +61,18 @@ export default function TableOfContents({ onSelectCategory }: TableOfContentsPro
 
       {/* 3. CENTERPIECE: KHUNG "TABLE OF CONTENT" & 5 NÚT BẤM VECTOR NGUYÊN BẢN */}
       <div className="relative z-10 my-auto py-8 sm:py-12 flex flex-col items-center gap-10 sm:gap-14 w-full max-w-5xl mx-auto">
-        {/* Khung TABLE OF CONTENT đặt chính xác tại tâm luồng sáng Spotlight */}
+        {/* Khung TABLE OF CONTENT đặt chính xác tại tâm luồng sáng Spotlight với viền đứt khúc nghệ thuật */}
         <div className="relative">
-          <div className="rounded-[2px] border border-white/60 bg-black/65 px-8 sm:px-16 md:px-24 py-5 sm:py-7 md:py-8 backdrop-blur-md shadow-[0_0_80px_rgba(255,255,255,0.15)] transition-all duration-300">
+          <div className="relative rounded-[2px] border-[1.5px] border-dashed border-white/70 bg-black/70 px-8 sm:px-16 md:px-24 py-5 sm:py-7 md:py-8 backdrop-blur-md shadow-[0_0_80px_rgba(255,255,255,0.15)] transition-all duration-300">
+            {/* 4 Chấu góc kiến trúc nghệ thuật (Corner brackets) */}
+            <div className="pointer-events-none absolute -top-[2px] -left-[2px] w-3.5 h-3.5 border-t-2 border-l-2 border-white" />
+            <div className="pointer-events-none absolute -top-[2px] -right-[2px] w-3.5 h-3.5 border-t-2 border-r-2 border-white" />
+            <div className="pointer-events-none absolute -bottom-[2px] -left-[2px] w-3.5 h-3.5 border-b-2 border-l-2 border-white" />
+            <div className="pointer-events-none absolute -bottom-[2px] -right-[2px] w-3.5 h-3.5 border-b-2 border-r-2 border-white" />
+
             <h1 className="font-display font-black text-2xl sm:text-4xl md:text-5xl lg:text-6xl uppercase tracking-wider text-white text-center drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)]">
               TABLE OF CONTENT
             </h1>
-          </div>
-
-          {/* Con trỏ chuột retro gắn ở góc dưới bên phải như nguyên bản bản vẽ */}
-          <div className="absolute -bottom-3 -right-3 sm:-bottom-4 sm:-right-4 drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] pointer-events-none">
-            <svg
-              className="h-6 w-6 sm:h-8 sm:w-8"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M4 2L16 14L10.5 15L14 22L11.5 23.2L8 16.2L4 20.2V2Z"
-                fill="#ffffff"
-                stroke="#000000"
-                strokeWidth="1.5"
-                strokeLinejoin="round"
-              />
-            </svg>
           </div>
         </div>
 
