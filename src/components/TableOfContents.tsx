@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import SmokeSpotlightCanvas from "./SmokeSpotlightCanvas";
 import { sound } from "@/utils/audio";
 import type { CategoryType } from "@/types";
 
@@ -50,29 +50,17 @@ export default function TableOfContents({ onSelectCategory }: TableOfContentsPro
 
   return (
     <section className="relative w-full min-h-screen py-16 px-6 sm:px-12 md:px-16 flex flex-col justify-between bg-black text-white select-none overflow-hidden">
-      {/* 1. NỀN SPOTLIGHT NGUYÊN BẢN FULLSCREEN: Tràn viền 100vw x 100vh, sắc nét 250 DPI không bể hình */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <Image
-          src="/images/page3_pure_spotlight_bg.jpg"
-          alt="Trần Nam Tiến Portfolio - Table of Content Backdrop"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-top select-none filter contrast-110 brightness-95"
-        />
-        {/* Lớp gradient hòa tan êm ái 4 mép vào nền đen, không để lại mép cắt cứng */}
-        <div className="pointer-events-none absolute inset-0 bg-radial-vignette opacity-60" />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40" />
-      </div>
+      {/* 1. NỀN KHÓI XÁM CHUYỂN ĐỘNG & SPOTLIGHT ĐỈNH: Fluid WebGL Shader 60FPS */}
+      <SmokeSpotlightCanvas />
 
       {/* 2. HEADER BAR (2 GÓC TRÊN NGUYÊN BẢN) */}
-      <div className="w-full max-w-7xl mx-auto flex items-center justify-between font-display text-xs sm:text-sm uppercase tracking-wider font-bold text-white/90">
+      <div className="relative z-10 w-full max-w-7xl mx-auto flex items-center justify-between font-display text-xs sm:text-sm uppercase tracking-wider font-bold text-white/90">
         <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">DATE 2026</span>
         <span className="drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">GRAPHIC DESIGNER</span>
       </div>
 
       {/* 3. CENTERPIECE: KHUNG "TABLE OF CONTENT" & 5 NÚT BẤM VECTOR NGUYÊN BẢN */}
-      <div className="my-auto py-8 sm:py-12 flex flex-col items-center gap-10 sm:gap-14 w-full max-w-5xl mx-auto">
+      <div className="relative z-10 my-auto py-8 sm:py-12 flex flex-col items-center gap-10 sm:gap-14 w-full max-w-5xl mx-auto">
         {/* Khung TABLE OF CONTENT đặt chính xác tại tâm luồng sáng Spotlight */}
         <div className="relative">
           <div className="rounded-[2px] border border-white/60 bg-black/65 px-8 sm:px-16 md:px-24 py-5 sm:py-7 md:py-8 backdrop-blur-md shadow-[0_0_80px_rgba(255,255,255,0.15)] transition-all duration-300">

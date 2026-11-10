@@ -11,4 +11,5 @@ export { default as CustomCursor } from "./CustomCursor";
 export { default as CamcorderHUD } from "./CamcorderHUD";
 export { default as SmoothScroll } from "./SmoothScroll";
 export { default as RapidImageTransition } from "./RapidImageTransition";
+export { default as SmokeSpotlightCanvas } from "./SmokeSpotlightCanvas";
 
