@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { ArrowDown, Sparkles } from "lucide-react";
 import { sound } from "@/utils/audio";
 
 interface HeroCoverProps {

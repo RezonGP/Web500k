@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { ArrowUp, ArrowUpRight, Phone, Mail, Sparkles } from "lucide-react";
+import { ArrowUp, ArrowUpRight, Phone, Mail } from "lucide-react";
 import { sound } from "@/utils/audio";
 import { useScrollTo } from "@/hooks";
 
@@ -26,7 +26,6 @@ export default function Footer({ onNavigate }: FooterProps) {
           {/* Left: Authentic Signature of Trần Nam Tiến */}
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2 font-sans text-[11px] uppercase tracking-wider text-white/50 font-medium">
-              <Sparkles className="h-3 w-3 text-amber-300" />
               <span>OFFICIAL PORTFOLIO SIGNATURE // 2026</span>
             </div>
 

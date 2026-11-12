@@ -84,7 +84,7 @@ export default function Home() {
             </div>
 
             {/* 3. Selected Works Gallery (Always active for seamless scrolling) */}
-            <div className="relative z-10 border-t border-white/10">
+            <div className="relative z-10">
               <HomeSlider
                 projects={projects}
                 onSelectProject={handleSelectProject}

@@ -3,7 +3,7 @@
 import React, { useCallback, useMemo } from "react";
 import Image from "next/image";
 import type { Project, CategoryType, CategoryMeta } from "@/types";
-import { X, ArrowUpRight, Sparkles, ArrowLeft } from "lucide-react";
+import { X, ArrowUpRight, ArrowLeft } from "lucide-react";
 import { sound } from "@/utils/audio";
 import { useScrollLock, useKeyPress } from "@/hooks";
 
@@ -104,7 +104,6 @@ export default function CategoryModal({
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>RETURN TO INDEX</span>
             </button>
-            <Sparkles className="h-4 w-4 text-amber-300" />
             <span className="text-white font-display font-bold text-sm">{category}</span>
             <span>•</span>
             <span className="text-amber-300 font-display font-bold">{categoryProjects.length} PROJECTS</span>

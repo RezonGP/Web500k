@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { ArrowLeft, ArrowUpRight, Phone, Mail, GraduationCap, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Phone, Mail, GraduationCap } from "lucide-react";
 import { sound } from "@/utils/audio";
 
 interface AboutSectionProps {
@@ -32,7 +32,6 @@ export default function AboutSection({ onBack }: AboutSectionProps) {
               <span>RETURN TO WORKS</span>
             </button>
           )}
-          <Sparkles className="h-3.5 w-3.5 text-amber-300" />
           <span className="text-white font-display font-bold">PROFILE // ABOUT ME</span>
         </div>
         <span className="font-display">TRẦN NAM TIẾN // CV DOSSIER 2026</span>
