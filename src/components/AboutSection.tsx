@@ -42,7 +42,7 @@ export default function AboutSection({ onBack }: AboutSectionProps) {
         {/* Ambient Cinema Lighting Backlight */}
         <div className="relative w-full aspect-[2924/2067] overflow-hidden rounded-[2px] border border-white/15 shadow-[0_0_100px_rgba(255,255,255,0.06)] bg-neutral-950">
           <Image
-            src="/images/about_me_full_page.jpg"
+            src="/images/about_me_full_page.webp"
             alt="Trần Nam Tiến - About Me Profile Dossier"
             fill
             priority

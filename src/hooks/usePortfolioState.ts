@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import type { Project, CategoryType, NavSection, ViewMode } from "@/types";
+import type { Project, CategoryType, NavSection, ViewMode, OriginRect } from "@/types";
 import { projects } from "@/data/projects";
 
 /**
@@ -14,6 +14,7 @@ export function usePortfolioState() {
   const [viewMode, setViewMode] = useState<ViewMode>("slider");
   const [activeCategory, setActiveCategory] = useState<CategoryType | null>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [projectOriginRect, setProjectOriginRect] = useState<OriginRect | null>(null);
   const [audioActive, setAudioActive] = useState(false);
 
   // Check URL query to allow instant skip for dev testing / direct linking
@@ -50,11 +51,13 @@ export function usePortfolioState() {
     setActiveCategory(null);
   }, []);
 
-  const handleSelectProject = useCallback((p: Project) => {
+  const handleSelectProject = useCallback((p: Project, originRect?: OriginRect) => {
+    setProjectOriginRect(originRect ?? null);
     setSelectedProject(p);
   }, []);
 
   const handleCloseProject = useCallback(() => {
+    setProjectOriginRect(null);
     setSelectedProject(null);
   }, []);
 
@@ -65,6 +68,7 @@ export function usePortfolioState() {
       : projects;
     const idx = currentList.findIndex((p) => p.id === selectedProject.id);
     const nextIdx = (idx + 1) % currentList.length;
+    setProjectOriginRect(null);
     setSelectedProject(currentList[nextIdx]);
   }, [selectedProject, activeCategory]);
 
@@ -75,6 +79,7 @@ export function usePortfolioState() {
       : projects;
     const idx = currentList.findIndex((p) => p.id === selectedProject.id);
     const prevIdx = (idx - 1 + currentList.length) % currentList.length;
+    setProjectOriginRect(null);
     setSelectedProject(currentList[prevIdx]);
   }, [selectedProject, activeCategory]);
 
@@ -84,6 +89,7 @@ export function usePortfolioState() {
     viewMode,
     activeCategory,
     selectedProject,
+    projectOriginRect,
     audioActive,
     handleIntroComplete,
     handleNavigate,

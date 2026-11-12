@@ -23,6 +23,7 @@ export default function Home() {
     viewMode,
     activeCategory,
     selectedProject,
+    projectOriginRect,
     audioActive,
     handleIntroComplete,
     handleNavigate,
@@ -119,6 +120,7 @@ export default function Home() {
       {/* 5. Level 3 Project Detail Modal */}
       <ProjectModal
         project={selectedProject}
+        originRect={projectOriginRect}
         onClose={handleCloseProject}
         onBackToCategory={activeCategory ? handleCloseProject : undefined}
         onNext={handleNextProject}

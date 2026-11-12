@@ -43,7 +43,7 @@ export default function HeroCover({ onExplore }: HeroCoverProps) {
         }}
       >
         <Image
-          src="/images/portfolio_cover.jpg"
+          src="/images/portfolio_cover.webp"
           alt="Portfolio TRẦN NAM TIẾN"
           fill
           priority

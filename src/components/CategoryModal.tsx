@@ -2,7 +2,7 @@
 
 import React, { useCallback, useMemo } from "react";
 import Image from "next/image";
-import type { Project, CategoryType, CategoryMeta } from "@/types";
+import type { Project, CategoryType, CategoryMeta, OriginRect } from "@/types";
 import { X, ArrowUpRight, ArrowLeft } from "lucide-react";
 import { sound } from "@/utils/audio";
 import { useScrollLock, useKeyPress } from "@/hooks";
@@ -11,7 +11,7 @@ interface CategoryModalProps {
   category: CategoryType | null;
   projects: Project[];
   onClose: () => void;
-  onSelectProject: (p: Project) => void;
+  onSelectProject: (p: Project, originRect?: OriginRect) => void;
   isProjectOpen?: boolean;
 }
 
@@ -20,31 +20,31 @@ const categoryMeta: Record<CategoryType, CategoryMeta> = {
     subtitle: "Art Direction & Key Visual",
     intro:
       "Khám phá nghệ thuật thị giác định hình phong cách, khai thác độ tương phản, chất liệu gai góc và chiều sâu không gian trừu tượng.",
-    heroButton: "/images/category_buttons/btn_hero_key_visual.png",
+    heroButton: "/images/category_buttons/btn_hero_key_visual.webp",
   },
   "PACKAGING DESIGN": {
     subtitle: "Packaging & Print Production",
     intro:
       "Giải pháp bao bì toàn diện từ đồ uống năng động, bìa sách văn học, ấn phẩm lịch để bàn cho đến sản phẩm công nghiệp cao cấp.",
-    heroButton: "/images/category_buttons/btn_hero_packaging.png",
+    heroButton: "/images/category_buttons/btn_hero_packaging.webp",
   },
   "BRANDING": {
     subtitle: "Brand Identity & Design System",
     intro:
       "Hệ thống nhận diện thương hiệu hoàn chỉnh: định hình ngôn ngữ biểu tượng, logo typography, ấn phẩm ứng dụng và cẩm nang quy chuẩn.",
-    heroButton: "/images/category_buttons/btn_hero_branding.png",
+    heroButton: "/images/category_buttons/btn_hero_branding.webp",
   },
   "TYPOGRAPHIC": {
     subtitle: "3D Spatial Form & Liquid Chrome",
     intro:
       "Nghệ thuật chữ trong không gian 3 chiều và bề mặt kim loại lỏng. Phá vỡ cấu trúc chữ 2D truyền thống để tạo nên những tác phẩm điêu khắc đương đại.",
-    heroButton: "/images/category_buttons/btn_hero_typographic.png",
+    heroButton: "/images/category_buttons/btn_hero_typographic.webp",
   },
   "CAMPAIGN": {
     subtitle: "Social Media & Advertising",
     intro:
       "Hệ thống ấn phẩm truyền thông mạng xã hội và poster quảng bá sản phẩm, tối ưu thị giác và gia tăng nhận diện thương hiệu đa nền tảng.",
-    heroButton: "/images/category_buttons/btn_hero_campaign.png",
+    heroButton: "/images/category_buttons/btn_hero_campaign.webp",
   },
 };
 
@@ -73,19 +73,26 @@ export default function CategoryModal({
   const meta = categoryMeta[category] || {
     subtitle: "Selected Works",
     intro: "Tập hợp các tác phẩm thiết kế đồ họa tiêu biểu.",
-    heroButton: "/images/category_buttons/btn_hero_key_visual.png",
+    heroButton: "/images/category_buttons/btn_hero_key_visual.webp",
   };
 
-  const handleCardClick = (p: Project) => {
+  const handleCardClick = (p: Project, e: React.MouseEvent<HTMLDivElement>) => {
+    const frameEl = e.currentTarget.querySelector("[data-project-frame]") as HTMLElement | null;
+    const rect = (frameEl ?? e.currentTarget).getBoundingClientRect();
     sound.playClick();
-    onSelectProject(p);
+    onSelectProject(p, {
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
+    });
   };
 
   return (
     <div
       onClick={handleClose}
       data-lenis-prevent
-      className="fixed inset-0 z-40 flex items-center justify-center bg-black/92 p-3 sm:p-6 md:p-8 backdrop-blur-2xl animate-in fade-in duration-300"
+      className="fixed inset-0 z-40 flex items-center justify-center bg-black/95 p-3 sm:p-6 md:p-8 animate-in fade-in duration-300"
     >
       {/* Modal Dialog Card */}
       <div
@@ -157,13 +164,13 @@ export default function CategoryModal({
             {categoryProjects.map((proj, idx) => (
               <div
                 key={proj.id}
-                onClick={() => handleCardClick(proj)}
+                onClick={(e) => handleCardClick(proj, e)}
                 onMouseEnter={() => sound.playHover()}
                 data-cursor="OPEN"
                 className="group cursor-pointer flex flex-col gap-3.5 rounded-xs border border-white/15 bg-black p-4 transition-all duration-300 hover:border-white hover:shadow-[0_0_35px_rgba(255,255,255,0.22)] hover:-translate-y-1"
               >
                 {/* Project Hero Visual Frame */}
-                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xs bg-neutral-900 border border-white/10">
+                <div data-project-frame className="relative aspect-[16/10] w-full overflow-hidden rounded-xs bg-neutral-900 border border-white/10">
                   <Image
                     src={proj.image}
                     alt={proj.title}
@@ -174,8 +181,8 @@ export default function CategoryModal({
                   <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-transparent" />
 
                   {/* Index Badge */}
-                  <div className="absolute left-3 top-3 font-display text-[11px] font-bold text-white/90 bg-black/85 px-2.5 py-1 backdrop-blur-xs border border-white/20">
-                    0{idx + 1} // {proj.year}
+                  <div className="absolute left-3 top-3 font-display text-[11px] font-bold text-white/90 bg-black/90 px-2.5 py-1 border border-white/20">
+                    {String(idx + 1).padStart(2, "0")} // {proj.year}
                   </div>
 
                   {/* Open Indicator */}

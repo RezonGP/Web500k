@@ -121,7 +121,7 @@ export default function IntroVideo({ onComplete }: IntroVideoProps) {
         <button
           onClick={toggleSound}
           data-cursor="SOUND"
-          className="flex items-center gap-1.5 rounded-full border border-white/20 bg-black/70 px-4 py-2 text-white/90 backdrop-blur-md transition-all hover:border-white hover:bg-white hover:text-black"
+          className="flex items-center gap-1.5 rounded-full border border-white/20 bg-black/85 px-4 py-2 text-white/90 transition-all hover:border-white hover:bg-white hover:text-black"
         >
           {isMuted ? <VolumeX className="h-3.5 w-3.5 text-red-400" /> : <Volume2 className="h-3.5 w-3.5 text-emerald-400" />}
           <span>{isMuted ? "SOUND OFF" : "SOUND ON"}</span>
@@ -130,7 +130,7 @@ export default function IntroVideo({ onComplete }: IntroVideoProps) {
         <button
           onClick={handleSkip}
           data-cursor="SKIP"
-          className="flex items-center gap-1.5 rounded-full border border-white/20 bg-black/70 px-4 py-2 text-white/90 backdrop-blur-md transition-all hover:border-white hover:bg-white hover:text-black"
+          className="flex items-center gap-1.5 rounded-full border border-white/20 bg-black/85 px-4 py-2 text-white/90 transition-all hover:border-white hover:bg-white hover:text-black"
         >
           <span>SKIP</span>
           <FastForward className="h-3.5 w-3.5" />

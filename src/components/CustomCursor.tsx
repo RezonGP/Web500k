@@ -1,87 +1,101 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 /**
  * CustomCursor: Hiển thị chữ gợi ý (Follower Text) dí theo con trỏ chuột.
- * ĐẶC ĐIỂM:
- * - Bỏ hoàn toàn viền tròn và chấm trắng (tránh 100% lỗi rác vệt trắng sọc hạt trên Chrome GPU).
- * - Chỉ có typography khắc màu (mix-blend-difference), tự động đảo màu trên nền trắng/đen.
- * - Chữ nằm chếch phía dưới chuột (+14px, +18px), không che khuất trỏ chuột hay phần tử tương tác.
+ * Tối ưu hiệu năng: cập nhật DOM trực tiếp qua ref (0 React re-render),
+ * chỉ chạy requestAnimationFrame khi chuột di chuyển và tự ngủ khi đứng yên,
+ * không dùng mix-blend-difference toàn màn hình.
  */
 export default function CustomCursor() {
-  const [cursorText, setCursorText] = useState("");
   const textRef = useRef<HTMLDivElement>(null);
+  const spanRef = useRef<HTMLSpanElement>(null);
 
   const mousePos = useRef({ x: -100, y: -100 });
   const textPos = useRef({ x: -100, y: -100 });
+  const lastTextRef = useRef("");
 
   useEffect(() => {
     // Chỉ kích hoạt trên máy tính có chuột (Desktop Pointer), bỏ qua màn hình cảm ứng
     if (window.matchMedia("(pointer: coarse)").matches) return;
 
-    let rafId: number;
+    let rafId = 0;
+
+    const updateLabel = (text: string) => {
+      if (text === lastTextRef.current) return;
+      lastTextRef.current = text;
+      if (spanRef.current) {
+        spanRef.current.textContent = text;
+      }
+      if (textRef.current) {
+        textRef.current.style.opacity = text ? "1" : "0";
+      }
+    };
+
+    const render = () => {
+      const dx = mousePos.current.x - textPos.current.x;
+      const dy = mousePos.current.y - textPos.current.y;
+
+      textPos.current.x += dx * 0.25;
+      textPos.current.y += dy * 0.25;
+
+      if (textRef.current) {
+        textRef.current.style.transform = `translate3d(${textPos.current.x + 14}px, ${textPos.current.y + 18}px, 0)`;
+      }
+
+      if (Math.abs(dx) > 0.25 || Math.abs(dy) > 0.25) {
+        rafId = requestAnimationFrame(render);
+      } else {
+        rafId = 0;
+      }
+    };
+
+    const wakeRaf = () => {
+      if (!rafId) {
+        rafId = requestAnimationFrame(render);
+      }
+    };
 
     const handleMouseMove = (e: MouseEvent) => {
       mousePos.current.x = e.clientX;
       mousePos.current.y = e.clientY;
 
       const target = e.target as HTMLElement | null;
-      if (!target) return;
+      const cursorTarget = target?.closest("[data-cursor]") as HTMLElement | null;
+      const nextText = cursorTarget?.getAttribute("data-cursor") || "";
+      updateLabel(nextText);
 
-      const cursorTarget = target.closest("[data-cursor]") as HTMLElement | null;
-      if (cursorTarget) {
-        const text = cursorTarget.getAttribute("data-cursor") || "";
-        setCursorText(text);
-      } else {
-        setCursorText("");
+      if (nextText) {
+        wakeRaf();
       }
     };
 
     const handleMouseLeave = () => {
-      setCursorText("");
+      updateLabel("");
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
     document.addEventListener("mouseleave", handleMouseLeave);
 
-    const render = () => {
-      // Lerp mượt mà cho chữ dí theo chuột
-      textPos.current.x += (mousePos.current.x - textPos.current.x) * 0.25;
-      textPos.current.y += (mousePos.current.y - textPos.current.y) * 0.25;
-
-      if (textRef.current) {
-        textRef.current.style.transform = `translate3d(${textPos.current.x + 14}px, ${textPos.current.y + 18}px, 0)`;
-      }
-
-      rafId = requestAnimationFrame(render);
-    };
-
-    rafId = requestAnimationFrame(render);
-
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseleave", handleMouseLeave);
-      cancelAnimationFrame(rafId);
+      if (rafId) cancelAnimationFrame(rafId);
     };
   }, []);
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-[99999] select-none overflow-hidden"
+      ref={textRef}
       aria-hidden="true"
+      className="pointer-events-none fixed top-0 left-0 z-[99999] select-none opacity-0 will-change-transform transition-opacity duration-150"
+      style={{ transform: "translate3d(-100px, -100px, 0)" }}
     >
-      {/* CHỈ CÓ TEXT KHẮC MÀU (mix-blend-difference), TUYỆT ĐỐI KHÔNG DÙNG VIỀN TRÒN HAY CHẤM TRẮNG */}
-      <div
-        ref={textRef}
-        className={`fixed top-0 left-0 will-change-transform mix-blend-difference pointer-events-none transition-opacity duration-150 ${
-          cursorText ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        <span className="font-display text-[11px] font-extrabold uppercase tracking-widest text-white select-none whitespace-nowrap">
-          {cursorText}
-        </span>
-      </div>
+      <span
+        ref={spanRef}
+        className="font-display text-[11px] font-extrabold uppercase tracking-widest text-white select-none whitespace-nowrap drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]"
+      />
     </div>
   );
 }

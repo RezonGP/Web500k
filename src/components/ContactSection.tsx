@@ -72,7 +72,7 @@ export default function ContactSection() {
         {/* Inquiry Form Right */}
         <div className="lg:col-span-7">
           {submitted ? (
-            <div className="flex h-full min-h-[400px] flex-col items-center justify-center rounded-xs border border-white/20 bg-neutral-950/60 p-8 text-center backdrop-blur-md animate-in zoom-in-95 duration-300">
+            <div className="flex h-full min-h-[400px] flex-col items-center justify-center rounded-xs border border-white/20 bg-neutral-950/90 p-8 text-center animate-in zoom-in-95 duration-300">
               <CheckCircle2 className="h-12 w-12 text-emerald-400 mb-4" />
               <h3 className="font-display text-2xl font-bold uppercase text-white mb-2">
                 TRANSMISSION RECEIVED

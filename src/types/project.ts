@@ -12,6 +12,13 @@ export interface Credit {
   name: string;
 }
 
+export interface OriginRect {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+}
+
 export interface Project {
   id: string;
   title: string;

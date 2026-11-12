@@ -2,14 +2,14 @@
 
 import React, { useRef, useState, useEffect, useMemo, useCallback } from "react";
 import Image from "next/image";
-import type { Project } from "@/types";
+import type { Project, OriginRect } from "@/types";
 import { CATEGORIES } from "@/data/projects";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { sound } from "@/utils/audio";
 
 interface HomeSliderProps {
   projects: Project[];
-  onSelectProject: (p: Project) => void;
+  onSelectProject: (p: Project, originRect?: OriginRect) => void;
   viewMode: "slider" | "grid";
 }
 
@@ -109,20 +109,27 @@ export default function HomeSlider({
     }
   };
 
-  const handleCardClick = (p: Project) => {
+  const handleCardClick = (p: Project, e: React.MouseEvent<HTMLDivElement>) => {
     if (dragDistanceRef.current > 8) {
       dragDistanceRef.current = 0;
       return;
     }
+    const frameEl = e.currentTarget.querySelector("[data-project-frame]") as HTMLElement | null;
+    const rect = (frameEl ?? e.currentTarget).getBoundingClientRect();
     sound.playClick();
-    onSelectProject(p);
+    onSelectProject(p, {
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
+    });
   };
 
   return (
     <section className="relative flex min-h-screen w-full flex-col justify-between overflow-hidden pt-20 pb-12 sm:pt-24 bg-transparent select-none">
       {/* Lớp màn khói tối dịu mắt (Soft Atmospheric Veil): Hòa tan êm ở mép trên để chuyển đoạn liền mạch, làm dịu ánh sáng gắt phía sau */}
       <div
-        className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-[#09090b]/80 via-[#0a0a0d]/75 to-[#09090b]/90 backdrop-blur-[2px]"
+        className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-[#09090b]/85 via-[#0a0a0d]/82 to-[#09090b]/92"
         style={{
           WebkitMaskImage: "linear-gradient(to bottom, transparent 0px, black 140px, black 100%)",
           maskImage: "linear-gradient(to bottom, transparent 0px, black 140px, black 100%)",
@@ -187,24 +194,25 @@ export default function HomeSlider({
             {filteredProjects.map((proj, idx) => (
               <div
                 key={proj.id}
-                onClick={() => handleCardClick(proj)}
+                onClick={(e) => handleCardClick(proj, e)}
                 onMouseEnter={() => sound.playHover()}
                 data-cursor="VIEW"
-                className="group cursor-pointer flex flex-col gap-3.5 rounded-sm border border-white/10 bg-[#0d0d10]/90 p-3.5 backdrop-blur-md shadow-[0_12px_36px_rgba(0,0,0,0.6)] transition-all duration-500 ease-out hover:border-white/30 hover:bg-[#141418]/95 hover:-translate-y-1"
+                className="group cursor-pointer flex flex-col gap-3.5 rounded-sm border border-white/10 bg-[#0d0d10]/95 p-3.5 shadow-[0_12px_36px_rgba(0,0,0,0.6)] transition-all duration-500 ease-out hover:border-white/30 hover:bg-[#141418]/98 hover:-translate-y-1"
               >
                 {/* Artwork Frame: Chuẩn tỷ lệ 1.414:1 của trang slide, không che chữ */}
-                <div className="relative aspect-[1414/1000] w-full overflow-hidden rounded-xs bg-[#161618] border border-white/5">
+                <div data-project-frame className="relative aspect-[1414/1000] w-full overflow-hidden rounded-xs bg-[#161618] border border-white/5">
                   <Image
                     src={proj.image}
                     alt={proj.title}
                     fill
+                    loading={idx < 2 ? "eager" : "lazy"}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-black/5 transition-opacity duration-300 group-hover:opacity-0" />
 
                   {/* Corner Expand Pill */}
-                  <div className="absolute right-3 bottom-3 flex items-center gap-1.5 rounded-full border border-white/25 bg-black/75 px-3 py-1.5 font-display text-[10px] font-semibold uppercase tracking-wider text-white backdrop-blur-md opacity-0 transition-all duration-300 group-hover:opacity-100">
+                  <div className="absolute right-3 bottom-3 flex items-center gap-1.5 rounded-full border border-white/25 bg-black/85 px-3 py-1.5 font-display text-[10px] font-semibold uppercase tracking-wider text-white opacity-0 transition-all duration-300 group-hover:opacity-100">
                     <span>VIEW</span>
                     <ArrowUpRight className="h-3 w-3" />
                   </div>
@@ -253,26 +261,27 @@ export default function HomeSlider({
           {filteredProjects.map((proj, idx) => (
             <div
               key={proj.id}
-              onClick={() => handleCardClick(proj)}
+              onClick={(e) => handleCardClick(proj, e)}
               onMouseEnter={() => sound.playHover()}
               data-cursor="VIEW"
-              className="group relative flex flex-col gap-3.5 shrink-0 rounded-sm border border-white/10 bg-[#0d0d10]/90 p-3.5 sm:p-4 backdrop-blur-md shadow-[0_14px_40px_rgba(0,0,0,0.65)] transition-all duration-500 ease-out hover:border-white/30 hover:bg-[#141418]/95 hover:shadow-[0_20px_50px_rgba(0,0,0,0.9)]"
+              className="group relative flex flex-col gap-3.5 shrink-0 rounded-sm border border-white/10 bg-[#0d0d10]/95 p-3.5 sm:p-4 shadow-[0_14px_40px_rgba(0,0,0,0.65)] transition-all duration-500 ease-out hover:border-white/30 hover:bg-[#141418]/98 hover:shadow-[0_20px_50px_rgba(0,0,0,0.9)]"
               style={{ width: "min(86vw, 660px)", scrollSnapAlign: "center" }}
             >
               {/* Project Artwork Frame: Chuẩn tỷ lệ ảnh gốc 1414/1000, không đè chữ DATE 2026 */}
-              <div className="relative aspect-[1414/1000] w-full overflow-hidden rounded-xs bg-[#161618] border border-white/5">
+              <div data-project-frame className="relative aspect-[1414/1000] w-full overflow-hidden rounded-xs bg-[#161618] border border-white/5">
                 <Image
                   src={proj.image}
                   alt={proj.title}
                   fill
                   priority={idx < 2}
+                  loading={idx < 2 ? "eager" : "lazy"}
                   sizes="(max-width: 768px) 86vw, 660px"
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                 />
                 <div className="pointer-events-none absolute inset-0 bg-black/5 transition-opacity duration-300 group-hover:opacity-0" />
 
                 {/* Floating "VIEW DOSSIER ↗" Pill Button on Hover */}
-                <div className="absolute right-4 bottom-4 flex items-center gap-2 rounded-full border border-white/25 bg-black/75 px-4 py-1.5 font-display text-[11px] font-semibold uppercase tracking-wider text-white backdrop-blur-md opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-102 shadow-xl">
+                <div className="absolute right-4 bottom-4 flex items-center gap-2 rounded-full border border-white/25 bg-black/85 px-4 py-1.5 font-display text-[11px] font-semibold uppercase tracking-wider text-white opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-102 shadow-xl">
                   <span>VIEW DOSSIER</span>
                   <ArrowUpRight className="h-3.5 w-3.5" />
                 </div>
@@ -339,7 +348,7 @@ export default function HomeSlider({
               onMouseEnter={() => sound.playHover()}
               disabled={activeIndex === 0}
               data-cursor="PREV"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-neutral-900/85 text-white/80 backdrop-blur-md transition-all hover:border-white/50 hover:bg-white hover:text-black disabled:opacity-20 disabled:pointer-events-none"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-neutral-900/95 text-white/80 transition-all hover:border-white/50 hover:bg-white hover:text-black disabled:opacity-20 disabled:pointer-events-none"
             >
               <ArrowLeft className="h-4 w-4" />
             </button>
@@ -349,7 +358,7 @@ export default function HomeSlider({
               onMouseEnter={() => sound.playHover()}
               disabled={activeIndex === filteredProjects.length - 1}
               data-cursor="NEXT"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-neutral-900/85 text-white/80 backdrop-blur-md transition-all hover:border-white/50 hover:bg-white hover:text-black disabled:opacity-20 disabled:pointer-events-none"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-neutral-900/95 text-white/80 transition-all hover:border-white/50 hover:bg-white hover:text-black disabled:opacity-20 disabled:pointer-events-none"
             >
               <ArrowRight className="h-4 w-4" />
             </button>

@@ -17,9 +17,9 @@ interface NavigationProps {
 }
 
 const navItems: NavItem[] = [
-  { id: "works", label: "Works", sub: "Selected Archive 2025–2026", preview: "/images/portfolio/kv_rebellion_hero.jpg" },
-  { id: "about", label: "About Me", sub: "Trần Nam Tiến Profile & CV", preview: "/images/about_me_full_page.jpg" },
-  { id: "contact", label: "Contact", sub: "Commissions & Inquiries", preview: "/images/portfolio/brand_obt_hero.jpg" },
+  { id: "works", label: "Works", sub: "Selected Archive 2025–2026", preview: "/images/portfolio/kv_rebellion_hero.webp" },
+  { id: "about", label: "About Me", sub: "Trần Nam Tiến Profile & CV", preview: "/images/about_me_full_page.webp" },
+  { id: "contact", label: "Contact", sub: "Commissions & Inquiries", preview: "/images/portfolio/brand_obt_hero.webp" },
 ];
 
 export default function Navigation({
@@ -31,7 +31,7 @@ export default function Navigation({
   onToggleAudio,
 }: NavigationProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [hoveredPreview, setHoveredPreview] = useState<string>("/images/portfolio/kv_rebellion_hero.jpg");
+  const [hoveredPreview, setHoveredPreview] = useState<string>("/images/portfolio/kv_rebellion_hero.webp");
   const { isFullscreen, toggleFullscreen } = useFullscreen();
 
   const handleAudioToggle = () => {
@@ -59,7 +59,7 @@ export default function Navigation({
   return (
     <>
       {/* Top Header Bar with Glass Effect */}
-      <header className="fixed left-0 right-0 top-0 z-40 flex h-20 items-center justify-between px-6 font-sans text-xs uppercase tracking-wider font-medium sm:px-12 backdrop-blur-md bg-black/60 border-b border-white/5 transition-all duration-300 animate-in fade-in slide-in-from-top-4 duration-500">
+      <header className="fixed left-0 right-0 top-0 z-40 flex h-20 items-center justify-between px-6 font-sans text-xs uppercase tracking-wider font-medium sm:px-12 bg-black/90 border-b border-white/5 transition-all duration-300 animate-in fade-in slide-in-from-top-4 duration-500">
         {/* Brand Logo / Name */}
         <div
           onClick={() => handleItemClick("works")}
@@ -123,7 +123,7 @@ export default function Navigation({
                 onClick={handleViewToggle}
                 onMouseEnter={() => sound.playHover()}
                 data-cursor="TOGGLE"
-                className="hidden items-center gap-1.5 rounded-full border border-white/20 bg-black/60 px-3.5 py-1.5 text-white/80 backdrop-blur-md transition-all hover:border-white hover:text-white lg:flex"
+                className="hidden items-center gap-1.5 rounded-full border border-white/20 bg-black/80 px-3.5 py-1.5 text-white/80 transition-all hover:border-white hover:text-white lg:flex"
               >
                 <span>VIEW:</span>
                 <span className="font-bold text-white">
@@ -138,7 +138,7 @@ export default function Navigation({
               onMouseEnter={() => sound.playHover()}
               data-cursor="AUDIO"
               title="Toggle Ambient Audio"
-              className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-white/20 bg-black/60 text-white/80 backdrop-blur-md transition-all hover:border-white hover:text-white hover:scale-105"
+              className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-white/20 bg-black/80 text-white/80 transition-all hover:border-white hover:text-white hover:scale-105"
             >
               {audioActive ? <Volume2 className="h-4 w-4 text-emerald-400" /> : <VolumeX className="h-4 w-4 text-white/40" />}
             </button>
@@ -149,7 +149,7 @@ export default function Navigation({
               onMouseEnter={() => sound.playHover()}
               data-cursor="EXPAND"
               title="Toggle Fullscreen"
-              className="hidden h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-black/60 text-white/80 backdrop-blur-md transition-all hover:border-white hover:text-white hover:scale-105 sm:flex"
+              className="hidden h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-black/80 text-white/80 transition-all hover:border-white hover:text-white hover:scale-105 sm:flex"
             >
               {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
             </button>
@@ -159,7 +159,7 @@ export default function Navigation({
               onClick={handleMenuToggle}
               onMouseEnter={() => sound.playHover()}
               data-cursor="MENU"
-              className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-white/30 bg-white/10 px-4 sm:px-5 py-1.5 sm:py-2 text-white backdrop-blur-md transition-all duration-300 hover:border-white hover:bg-white hover:text-black hover:scale-105 shadow-md"
+              className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-white/30 bg-white/10 px-4 sm:px-5 py-1.5 sm:py-2 text-white transition-all duration-300 hover:border-white hover:bg-white hover:text-black hover:scale-105 shadow-md"
             >
               {isOpen ? <X className="h-3.5 w-3.5 transition-transform rotate-90" /> : <Menu className="h-3.5 w-3.5" />}
               <span className="font-bold text-[11px] sm:text-xs">{isOpen ? "CLOSE" : "MENU"}</span>
@@ -170,7 +170,7 @@ export default function Navigation({
 
       {/* Fullscreen Animated Menu Drawer */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex flex-col justify-between bg-black/95 px-8 py-24 sm:px-20 animate-in fade-in zoom-in-95 duration-300 backdrop-blur-2xl">
+        <div className="fixed inset-0 z-50 flex flex-col justify-between bg-black/95 px-8 py-24 sm:px-20 animate-in fade-in zoom-in-95 duration-300">
           {/* Hover Preview Background */}
           <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden opacity-25 transition-all duration-700 ease-out">
             <Image
